@@ -12,10 +12,21 @@ public class RaceManager : MonoBehaviour {
     private bool isRaceStarted = false;
     public bool IsRacingStarted { get { return isRaceStarted; } }
 
+    private bool isRaceFinished;
+    public bool IsRaceFinished { get { return isRaceFinished; } }
+
+
+    public int totalCheckpointsToFinish;
+
+
     public float countdownTime = 3;
     public Text countdownText;
     public Text raceTotalTimeText;
-    [SerializeField]
+    public GameObject inGameHud;
+    public GameObject endGamePanel;
+    public Text finalTimeText;
+    private float finalTime;
+
     private float ellapsedTime;
     
 
@@ -31,8 +42,25 @@ public class RaceManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-       
-        TotalRaceTime();
+
+        if (isRaceFinished)
+        {
+            inGameHud.SetActive(false);
+            endGamePanel.SetActive(true);
+            finalTimeText.text = finalTime.ToString();
+        }
+
+        if(totalCheckpointsToFinish == CheckPointManager.CurrentCheckpoint-1)
+        {
+            //Stop the timer collect the final time for the track
+            isRaceFinished = true;
+            finalTime = ellapsedTime;
+            raceTotalTimeText.text = finalTime.ToString();
+        }
+        else
+        {
+            TotalRaceTime();
+        }
         
 	}
 
@@ -64,13 +92,15 @@ public class RaceManager : MonoBehaviour {
         //Keep track of the current time
         if (isRaceStarted)
         {
-            float ellapsedTime = Time.time - startTime;
+            ellapsedTime = Time.time - startTime;
             raceTotalTimeText.text = ellapsedTime.ToString();
+
+
+
+
+
+
         }
-          
-        
-       
-        
     }
 
  
